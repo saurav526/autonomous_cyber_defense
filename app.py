@@ -13,11 +13,6 @@ from cyber_model import (
     choose_action,
 )
 
-
-# ============================================================
-# PAGE CONFIGURATION
-# ============================================================
-
 st.set_page_config(
     page_title="Autonomous Cyber Defense",
     page_icon="🛡️",
