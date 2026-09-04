@@ -10,6 +10,9 @@ A defensive ML simulation demonstrating:
 6. Reinforcement-learning response policy
 7. Streamlit dashboard and CSV export
 
+## clone GitHub repository, use
+git clone https://github.com/saurav526/autonomous_cyber_defense.git
+
 ## Run
 
 ```bash
