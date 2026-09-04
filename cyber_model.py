@@ -8,10 +8,7 @@ import torch.optim as optim
 
 ACTIONS = ["Monitor", "Rate-limit", "Isolate", "Block source"]
 
-
-# ============================================================
 # 1. Synthetic network generation
-# ============================================================
 def generate_network(n_nodes=40, attack_rate=0.10, seed=42):
     rng = np.random.default_rng(seed)
     random.seed(seed)
