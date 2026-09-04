@@ -34,29 +34,64 @@ if "result" not in st.session_state:
 run = st.sidebar.button("🚀 Run Defense Simulation", type="primary")
 
 if run:
-    with st.spinner("Generating traffic, learning graph representations, detecting anomalies, and selecting responses..."):
-        data = generate_network(n_nodes=n_nodes, attack_rate=attack_rate, seed=int(seed))
-        X = build_graph_features(data["graph"], data["node_features"])
+    with st.spinner(
+        "Generating traffic, learning graph representations, "
+        "detecting anomalies, and selecting responses..."
+    ):
+        data = generate_network(
+            n_nodes=n_nodes,
+            attack_rate=attack_rate,
+            seed=int(seed)
+        )
 
-        losses = train_autoencoder(X, epochs=epochs)
+        X = build_graph_features(
+            data["graph"],
+            data["node_features"]
+        )
+
+        # Train self-supervised anomaly detector
+        losses = train_autoencoder(
+            X,
+            epochs=epochs
+        )
+
+        # Calculate anomaly scores
         scores = score_anomalies(X)
 
+        # Detect anomalies
         threshold = np.quantile(scores, 0.90)
         detected = scores >= threshold
 
-        # Train a small DQN on the simulated defensive environment.
-        qtable = train_dqn(episodes=800, seed=int(seed))
-        actions = [choose_action(float(s), qtable) if detected[i] else "Monitor"
-                   for i, s in enumerate(scores)]
+        # Train RL response agent
+        qtable = train_dqn(
+            episodes=800,
+            seed=int(seed)
+        )
 
+        # Select defensive actions
+        actions = [
+            choose_action(float(s), qtable)
+            if detected[i]
+            else "Monitor"
+            for i, s in enumerate(scores)
+        ]
+
+        # =================================================
+        # IMPORTANT: Add ML results to dataframe
+        # =================================================
+
+        data["table"]["anomaly_score"] = scores
+        data["table"]["detected"] = detected
+        data["table"]["actions"] = actions
+
+        # Also keep them separately
         data["scores"] = scores
         data["detected"] = detected
         data["actions"] = actions
         data["threshold"] = threshold
         data["losses"] = losses
-        st.session_state.result = data
 
-result = st.session_state.result
+        st.session_state.result = data
 
 if result is None:
     st.info("Set the controls and click **Run Defense Simulation** to generate a live defensive simulation.")
