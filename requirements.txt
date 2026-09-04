@@ -1,0 +1,6 @@
+streamlit>=1.36
+numpy>=1.26
+pandas>=2.2
+matplotlib>=3.8
+networkx>=3.3
+torch>=2.3
