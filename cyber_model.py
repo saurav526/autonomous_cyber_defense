@@ -66,10 +66,7 @@ def generate_network(n_nodes=40, attack_rate=0.10, seed=42):
         "table": table,
     }
 
-
-# ============================================================
 # 2. Graph representation
-# ============================================================
 def build_graph_features(G, X):
     """
     Simple graph convolution:
